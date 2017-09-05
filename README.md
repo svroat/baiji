@@ -1,7 +1,3 @@
-# baiji (OpenBSD)
-
-baiji is a simple CLI web scrapper written in C (using libcurl and libxml). 
-
 # Installation 
 
 1. Download dependencies:
