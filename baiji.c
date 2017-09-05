@@ -52,14 +52,14 @@ typedef struct {
 } Engine_comp;
 
 typedef struct {
-	char *search;
-	long numpages;
+    char *search;
+    long numpages;
     Engine_comp engine;
 } Url_comp;
 
 typedef struct {
-	char *data;
-	int pos;
+    char *data;
+    int pos;
 } Write_result;
 
 typedef struct {
@@ -131,7 +131,7 @@ getEngine(const char *engine)
     } else if (strcmp(engine, "ytb") == 0) {
         return enginesdef[Youtube]; 
     } else {
-		fprintf(stderr, "%s%s%s\n",
+	fprintf(stderr, "%s%s%s\n",
                        "[Error] Not known engine shortcut "
                        "(", engine, "). Use the opt -l for see the "
                        "shortcuts of engines suppported.");
@@ -143,7 +143,7 @@ getEngine(const char *engine)
 int
 getNpages(const char *npages)
 {
-	Url_comp tmp_url;
+    Url_comp tmp_url;
     char *ep_strtol;
 
     if (npages) {
@@ -184,7 +184,7 @@ usage(void)
 void
 printEngines(void)
 {
-	fprintf(stderr,"Shortcuts of engines:\n\n"
+    fprintf(stderr,"Shortcuts of engines:\n\n"
                    "\tahm: ahmia.fi\n"
                    "\tamz: amazon.com\n"
                    "\tari: archive.is\n"
@@ -204,37 +204,37 @@ printEngines(void)
 void
 setup(const Url_comp url_user)
 {
-	CURL *curl = curl_easy_init();
+    CURL *curl = curl_easy_init();
     char *search_enc = NULL;
     int  errorBaiji  = 0;
 
-	if (!curl) {
-		fprintf(stderr, "%s\n", "[Error] setup, curl_easy_init().");
-		goto error_setup;
-	}
+    if (!curl) {
+	fprintf(stderr, "%s\n", "[Error] setup, curl_easy_init().");
+	goto error_setup;
+    }
 
     if (!url_user.search || !url_user.numpages ||
         !url_user.engine.Full)
         goto error_setup;
 
-	if (!(search_enc = curl_easy_escape(curl, url_user.search, 0))) {
-		fprintf(stderr, "%s\n", "[Error] setup, curl_easy_escape().");
-		goto error_setup;
-	}
+    if (!(search_enc = curl_easy_escape(curl, url_user.search, 0))) {
+	fprintf(stderr, "%s\n", "[Error] setup, curl_easy_escape().");
+	goto error_setup;
+    }
 
     if ((errorBaiji = makeJobBj(url_user, search_enc)))
         goto error_setup;
 
     curl_free(search_enc);
     curl_easy_cleanup(curl);
-	curl_global_cleanup();
+    curl_global_cleanup();
 
     return;
 
 error_setup:
     if (search_enc) curl_free(search_enc);
     if (curl)       curl_easy_cleanup(curl);
-	curl_global_cleanup();
+    curl_global_cleanup();
     return;
 }
 
@@ -339,11 +339,11 @@ printHeader(const char *search, const int lpage,
             const char *engineF, const char *search_enc)
 {
     fprintf(stdout, "%s", "####################################################\n");
-	fprintf(stdout, "\t[ BAIJI ]\n");
-	fprintf(stdout, "Search        : %s\n" , search);
-	fprintf(stdout, "Num. of pages : %d\n" , lpage);
-	fprintf(stdout, "Engine        : %s\n" , engineF);
-	fprintf(stdout, "Search enc.   : %s\n" , search_enc);
+    fprintf(stdout, "\t[ BAIJI ]\n");
+    fprintf(stdout, "Search        : %s\n" , search);
+    fprintf(stdout, "Num. of pages : %d\n" , lpage);
+    fprintf(stdout, "Engine        : %s\n" , engineF);
+    fprintf(stdout, "Search enc.   : %s\n" , search_enc);
     fprintf(stdout, "%s", "####################################################\n");
 }
 
@@ -436,17 +436,17 @@ error_callcurl:
 size_t
 wrtCurl(void *ptr, size_t size, size_t nmemb, void *stream)
 {
-	Write_result *result = (Write_result *)stream;
+    Write_result *result = (Write_result *)stream;
 
-	if (result->pos + size * nmemb >= BUFFER_DEF - 1) {
-		fprintf(stderr, "%s\n", "Error: writeCurl(), buffer limitado.");
-		return 0;
-	}
+    if (result->pos + size * nmemb >= BUFFER_DEF - 1) {
+	fprintf(stderr, "%s\n", "Error: writeCurl(), buffer limitado.");
+	return 0;
+    }
 
-	memcpy(result->data + result->pos, ptr, size *nmemb);
-	result->pos += size * nmemb;
+    memcpy(result->data + result->pos, ptr, size *nmemb);
+    result->pos += size * nmemb;
 
-	return size * nmemb;
+    return size * nmemb;
 }
 
 int 
@@ -593,9 +593,7 @@ printToTerm(xmlXPathObjectPtr titles, xmlXPathObjectPtr urls,
     for (i = 0; i < titles->nodesetval->nodeNr; i++, j++) {
         fprintf(stdout, "%s\n", 
                         "+--------------------------------------------------+");
-
         fprintf(stdout, "[%d] ", j);
-
         fprintf(stdout, "%s%s\n",
                         addToTit,
                         xmlNodeGetContent(titles->nodesetval->nodeTab[i]));
@@ -626,30 +624,30 @@ error_print_t:
 int
 main(int argc, char *argv[])
 {
-	Url_comp main_url = setDefault();
+    Url_comp main_url = setDefault();
 
-	ARGEBIN {
+    ARGEBIN {
     case 'e':
         main_url.engine = getEngine(EARGF(usage()));
-		break;
-	case 'l':
-		printEngines();
-		break;
-	case 'n':
-		main_url.numpages = getNpages(EARGF(usage()));
-		break;
-	default:
-		usage();
-	} ARGEND;
+	break;
+    case 'l':
+	printEngines();
+	break;
+    case 'n':
+	main_url.numpages = getNpages(EARGF(usage()));
+	break;
+    default:
+	usage();
+    } ARGEND;
 
-	if (argc > 0) {
-		main_url.search   = getSearch(argv[0]);
-		setup(main_url);
-	} else {
-		usage();
-	}
+    if (argc > 0) {
+	main_url.search   = getSearch(argv[0]);
+	setup(main_url);
+    } else {
+	usage();
+    }
 
     if (main_url.search) free(main_url.search);
 
-	return 0;
+    return 0;
 }
