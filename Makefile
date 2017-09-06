@@ -25,7 +25,7 @@ baiji: $(OBJ)
 
 test:
 	@echo Testing...
-	@baiji "Travis CI"
+	@./baiji "Travis CI"
 
 clean:
 	@echo cleaning
