@@ -23,8 +23,12 @@ baiji: $(OBJ)
 	@echo CC -o $@
 	@$(CC) $(BAIJI_CFLAGS) -o $@ $(OBJ) $(BAIJI_LDFLAGS)
 
+test:
+	@echo Testing...
+	@baiji "Travis CI"
+
 clean:
 	@echo cleaning
 	@rm -f baiji $(OBJ)
 
-.PHONY: all options clean
+.PHONY: all options test clean
