@@ -1,4 +1,4 @@
-[![travis](https://travis-ci.org/svroat/baiji.png)](https://api.travis-ci.org/svroat/baiji)
+[![travis](https://travis-ci.org/svroat/baiji.png)](https://travis-ci.org/svroat/baiji)
 
 ## Installation
 
